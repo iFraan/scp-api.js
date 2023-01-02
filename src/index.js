@@ -26,7 +26,8 @@ class API {
     }
 
     async getSCP(code) {
-        if (this.scps[`${code}`]) {
+        if (typeof code == 'undefined') throw new Error('You gotta provide an SCP code.');
+        if (!this.scps[`${code}`]) {
             /* fetch if doesnt have it on cache */
             this.scps[`${code}`] = await _getSCP(code, this.lang);
         }
