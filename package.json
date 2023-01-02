@@ -1,0 +1,29 @@
+{
+  "name": "scp-api.js",
+  "version": "1.1.0",
+  "description": "Scrapper for SCP-wiki info.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iFraan/scp-api.js.git"
+  },
+  "keywords": [
+    "scp-api",
+    "scp",
+    "wrapper",
+    "scrapper"
+  ],
+  "author": "ifraan_",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/iFraan/scp-api.js/issues"
+  },
+  "homepage": "https://github.com/iFraan/scp-api.js#readme",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "jsdom": "^20.0.3"
+  }
+}
