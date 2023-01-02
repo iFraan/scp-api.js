@@ -2,13 +2,21 @@ const { API } = require('./index');
 
 m = (async () => {
 
-    const api = new API();
+    console.log('---- Direct Method: ----')
     try {
-        console.log(await api.getSCP('3007'))
+        console.log(await API.fetchSCP('3007'))
     } catch (e) {
         console.log(e)
     }
-    console.log(api)
+    console.log('---- Cache Method: ----')
+    const api = new API();
+    try {
+        await api.getSCP('3007');
+        await api.getSCP('982');
+        console.log(api.scps)
+    } catch (e) {
+        console.log(e)
+    }
 })
 
 m()
