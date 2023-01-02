@@ -36,7 +36,6 @@ const getSCP = async (code, lang = 'es') => new Promise((resolve, reject) => {
             data['title'] = title;
             data['content'] = content;
             data['full_text'] = content.join('\n');
-            data['images'] = images;
 
             resolve(data)
         })

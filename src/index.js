@@ -1,17 +1,15 @@
-const { getSCP } = require('./lib/scrapper');
+const { getSCP: _getSCP } = require('./lib/scrapper');
 const { getCode } = require('./lib/lang')
 class API {
 
     /**
      * Use API.getSCP instead.
-     * @param {string} scp_code 
      * @param {string} lang
      * @private // idk if it does something outside of typescript, but there it is
      */
-    constructor(scp_code, lang = 'es') {
-        this.code = scp_code;
+    constructor(lang = 'es') {
         this.lang = getCode(lang);
-        this._raw = {}
+        this.scps = {}
     }
 
     /**
@@ -20,13 +18,22 @@ class API {
      * @param {string} lang 
      * @returns API instance
      */
-    static async fetchSCP(code, lang) {
+    static async fetchSCP(code, lang, options = {}) {
         if (typeof code == 'undefined') throw new Error('You gotta provide an SCP code.');
-        const API = new API(code, lang);
-        return API;
+        const _API = new API(lang);
+        _API.scps[`${code}`] = await _getSCP(code, _API.lang);
+        return options.return_api ? _API : _API.scps[`${code}`];
     }
 
-    get raw() { return this._raw; }
+    async getSCP(code) {
+        if (this.scps[`${code}`]) {
+            /* fetch if doesnt have it on cache */
+            this.scps[`${code}`] = await _getSCP(code, this.lang);
+        }
+        return this.scps[`${code}`];
+    }
+
+    get raw() { return this.scps; }
 }
 
 module.exports = {
