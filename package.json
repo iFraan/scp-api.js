@@ -1,10 +1,17 @@
 {
   "name": "scp-api.js",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Scrapper for SCP-wiki info.",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "test.js"
+    "test": "ts-node test.ts",
+    "build": "tsup",
+    "start": "node dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,7 +30,7 @@
   },
   "homepage": "https://github.com/iFraan/scp-api.js#readme",
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.7.7",
     "jsdom": "^20.0.3"
   }
 }
