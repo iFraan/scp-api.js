@@ -1,10 +1,12 @@
+import { Language, SCP } from "../types/internal";
+
 const axios = require('axios');
 const { JSDOM } = require('jsdom');
 
 const empty = (x) => x.length === 0 || x === '' || x == 0 || x == false;
 const clean = x => x.replace(/(\+|\-) show block/, '').replace(/\t/g, '').replace(/\n/g, '').trim();
 
-const getSCP = async (code, lang = 'es') => new Promise((resolve, reject) => {
+export const fetchSCP = async (code: string, lang: Language = 'es') => new Promise<SCP>((resolve, reject) => {
 
     axios.get(`https://scp.fandom.com/${lang}/wiki/SCP-${code}`)
 
@@ -44,7 +46,3 @@ const getSCP = async (code, lang = 'es') => new Promise((resolve, reject) => {
             reject('Cant find that SCP')
         })
 })
-
-module.exports = {
-    getSCP
-}

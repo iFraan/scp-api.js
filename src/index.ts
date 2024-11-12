@@ -1,21 +1,15 @@
 import { fetchSCP } from './lib/scrapper';
 import { getCode } from './lib/lang';
-
-type SCP = {
-    title: string,
-    content: any[],
-    images: string[],
-    full_text: string
-}
+import { SCP, Language } from './types/internal';
 
 class API {
 
-    lang: string;
+    lang: Language;
     scps: {
         [id: string]: SCP;
     }
 
-    constructor({ lang = 'es' }) {
+    constructor({ lang = 'es' }: { lang?: Language | string }) {
         this.lang = getCode(lang);
         this.scps = {}
     }
