@@ -1,48 +1,40 @@
+import axios from "axios";
+import { JSDOM } from 'jsdom';
 import { Language, SCP } from "../types/internal";
 
-const axios = require('axios');
-const { JSDOM } = require('jsdom');
+const empty = (x: any) => x.length === 0 || x === '' || x == 0 || x == false;
+const clean = (x: string) => x.replace(/(\+|\-) show block/, '').replace(/\t/g, '').replace(/\n/g, '').trim();
 
-const empty = (x) => x.length === 0 || x === '' || x == 0 || x == false;
-const clean = x => x.replace(/(\+|\-) show block/, '').replace(/\t/g, '').replace(/\n/g, '').trim();
+export const fetchSCP = async (code: string, lang: Language = 'es') => {
 
-export const fetchSCP = async (code: string, lang: Language = 'es') => new Promise<SCP>((resolve, reject) => {
+    const result = {} as SCP;
 
-    axios.get(`https://scp.fandom.com/${lang}/wiki/SCP-${code}`)
+    try {
+        const response = await axios.get(`https://scp.fandom.com/${lang}/wiki/SCP-${code}`);
+        const dom = new JSDOM(response.data)
+        const { document } = dom.window;
 
-        .then(response => {
-            const dom = new JSDOM(response.data)
-            const { document } = dom.window;
-            const data = {
-                title: '',
-                content: [],
-                images: [],
-                full_text: ''
-            };
+        result.title = `${document.querySelector('.page-header__title')?.textContent?.trim()}`;
+        result.content = Array.from(document.querySelectorAll(".page-content p"))
+            .map((child, index) => index >= 2 && clean(child.textContent ?? '')) // first 2 items are trash
+            .filter(x => !empty(x));
+        result.full_text = result.content.join('\n');
 
-            const title = `${document.querySelector('.page-header__title').textContent.trim()}`;
-            const content = Array.from(document.querySelectorAll(".page-content p"))
-                .map((child, index) => index >= 2 && clean(child.textContent)) // first 2 items are trash
-                .filter(x => !empty(x));
-
-            try {
-                const thumbnail = {
-                    link: document.querySelector(".tright .image").href,
-                    details: clean(document.querySelector(".tright").textContent),
-                }
-                thumbnail && data.images.push(thumbnail);
-            } catch (e) {
-                /* doesnt have an image */
+        try {
+            const thumbnail = {
+                // @ts-ignore href does exists in a elements
+                link: document.querySelector(".tright .image")?.href ?? '',
+                details: clean(document.querySelector(".tright")?.textContent ?? ''),
             }
+            thumbnail?.link && result.images.push(thumbnail);
+        } catch (e) {
+            /* doesnt have an image */
+        }
 
-            data['title'] = title;
-            data['content'] = content;
-            data['full_text'] = content.join('\n');
+    } catch (e) {
+        console.log(e)
+        throw new Error('Cant find that SCP')
+    }
 
-            resolve(data)
-        })
-        .catch(e => {
-            console.log(e)
-            reject('Cant find that SCP')
-        })
-})
+    return result
+}
