@@ -16,30 +16,26 @@ npm i scp-api.js
 
 There is two ways to fetch data.
 
-You can use the method `API.fetchSCP` without creating an API instance first as it creates an API instance and returns the data fetched.
-Or you can create and API instance and use `getSCP` to take adventage of local cache data.
+You can use the method `fetchSCP` without creating an API instance first, 
+or you can create and API instance and use `getSCP` to take adventage of local cache data.
 
 Here you have the two examples: 
-```js title=test.js
-const { API } = require('scp-api.js')
+```js title=test.ts
+import { API, fetchSCP } from './src';
 
 console.log('---- Direct Method: ----')
-try {
-    /* can also pass langs and other options */
-    /* API.fetchSCP('3007', 'es', { return_api }) // This will return the API instance instead */
-    console.log(await API.fetchSCP('3007')) 
-} catch (e) {
-    console.log(e)
-}
+const scp3007 = await fetchSCP('3007')
+console.log({ scp3007 })
+
 console.log('---- Cache Method: ----')
 const api = new API();
-try {
-    await api.getSCP('3007'); // 3007 data
-    await api.getSCP('982'); // 982 data
-    console.log(api.scps) // Array of all SCPs fetched yet
-} catch (e) {
-    console.log(e)
-}
+const first = await api.getSCP('3007');
+const second = await api.getSCP('982');
+console.log('results: ', {
+    first,
+    second,
+})
+console.log('cache: ', api.raw)
 ```
 
 # Disclaimer
