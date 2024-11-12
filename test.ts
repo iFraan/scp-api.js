@@ -1,7 +1,6 @@
-const { API } = require('./index');
+import { API } from './src';
 
-m = (async () => {
-
+const test = async () => {
     console.log('---- Direct Method: ----')
     try {
         console.log(await API.fetchSCP('3007'))
@@ -17,6 +16,5 @@ m = (async () => {
     } catch (e) {
         console.log(e)
     }
-})
-
-m()
+}
+test()
