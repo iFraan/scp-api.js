@@ -14,22 +14,22 @@ export const fetchSCP = async (code: string, lang: Language = 'es') => {
         const dom = new JSDOM(response.data)
         const { document } = dom.window;
 
+        const content = Array.from(document.querySelectorAll(".page-content p")).slice(2); // first 2 items are trash
+
         result.title = `${document.querySelector('.page-header__title')?.textContent?.trim()}`;
-        result.content = Array.from(document.querySelectorAll(".page-content p"))
-            .map((child, index) => index >= 2 && clean(child.textContent ?? '')) // first 2 items are trash
-            .filter(x => !empty(x));
+        result.content = content.map((x => clean(x?.textContent ?? ''))).filter(x => !empty(x));
         result.full_text = result.content.join('\n');
 
         try {
             const thumbnail = {
-                // @ts-ignore href does exists in a elements
+                // @ts-ignore href does exists in a element
                 link: document.querySelector(".tright .image")?.href ?? '',
                 details: clean(document.querySelector(".tright")?.textContent ?? ''),
             }
-            thumbnail?.link && result.images.push(thumbnail);
-        } catch (e) {
-            /* doesnt have an image */
-        }
+            if (Boolean(thumbnail?.link)) {
+                result.images.push(thumbnail);
+            }
+        } catch (e) { /* doesnt have an image */ }
 
     } catch (e) {
         console.log(e)
