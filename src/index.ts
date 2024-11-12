@@ -1,4 +1,4 @@
-import { fetchSCP } from './lib/scrapper';
+import { fetchSCP as external_fetchSCP } from './lib/scrapper';
 import { getCode } from './lib/lang';
 import { SCP, Language } from './types/internal';
 
@@ -18,9 +18,14 @@ class API {
         if (typeof code == 'undefined') throw new Error('You gotta provide an SCP code.');
         if (!this.scps[`${code}`]) {
             /* fetch if doesnt have it on cache */
-            this.scps[`${code}`] = await fetchSCP(code, this.lang);
+            this.scps[`${code}`] = await external_fetchSCP(code, this.lang);
         }
         return this.scps[`${code}`];
+    }
+
+    // Compatibility with the old API
+    static async fetchSCP(code: string, lang?: Language) {
+        return await external_fetchSCP(code, lang);
     }
 
     get raw() { return {
@@ -31,7 +36,7 @@ class API {
 
 export {
     API,
-    fetchSCP
+    external_fetchSCP as fetchSCP
 }
 
 export default API;
