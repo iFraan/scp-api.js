@@ -22,7 +22,10 @@
     "scp-api",
     "scp",
     "wrapper",
-    "scrapper"
+    "scrapper",
+    "scp-wiki",
+    "scp-api-js",
+    "scp-api-ts"
   ],
   "author": "ifraan_",
   "license": "GPL-3.0",
