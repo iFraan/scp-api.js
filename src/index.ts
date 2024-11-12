@@ -9,8 +9,8 @@ class API {
         [id: string]: SCP;
     }
 
-    constructor({ lang = 'es' }: { lang?: Language | string }) {
-        this.lang = getCode(lang);
+    constructor(options?: { lang?: Language | string }) {
+        this.lang = getCode(options?.lang ?? 'es');
         this.scps = {}
     }
 
