@@ -2,7 +2,17 @@ import axios from "axios";
 import { JSDOM } from 'jsdom';
 import { Language, SCP } from "../types/internal";
 
-const empty = (x: any) => x.length === 0 || x === '' || x == 0 || x == false;
+const empty = <T>(x: T): boolean => {
+    return (
+      (typeof x === 'string' && x.length === 0) ||
+      (typeof x === 'string' && x.trim() === '') ||
+      (typeof x === 'number' && x === 0) ||
+      (typeof x === 'boolean' && x === false) ||
+      (Array.isArray(x) && x.length === 0) ||
+      x === null ||
+      x === undefined
+    );
+  };
 const clean = (x: string) => x.replace(/(\+|\-) show block/, '').replace(/\t/g, '').replace(/\n/g, '').trim();
 
 export const fetchSCP = async (code: string, lang: Language = 'es') => {
@@ -22,11 +32,11 @@ export const fetchSCP = async (code: string, lang: Language = 'es') => {
 
         try {
             const thumbnail = {
-                // @ts-ignore href does exists in a element
+                // @ts-expect-error href does exists in a element
                 link: document.querySelector(".tright .image")?.href ?? '',
                 details: clean(document.querySelector(".tright")?.textContent ?? ''),
             }
-            if (Boolean(thumbnail?.link)) {
+            if (thumbnail?.link) {
                 result.images.push(thumbnail);
             }
         } catch (e) { /* doesnt have an image */ }

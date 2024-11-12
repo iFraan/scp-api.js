@@ -1,7 +1,7 @@
 
 export type SCP = {
     title: string,
-    content: any[],
+    content: string[],
     images: {
         link: string | null,
         details: string | null,
